@@ -1,16 +1,18 @@
 import sqlite3
 import sys
 
-from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 
+from addEditCoffeeForm import Ui_Dialog
+from mainForm import Ui_MainWindow
 
-class AddCoffeeForm(QDialog):
+
+class AddCoffeeForm(QDialog, Ui_Dialog):
     def __init__(self, parent):
         super().__init__(parent)
         self.p = parent
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.roast.addItems(['Слабая', 'Средняя', 'Сильная', 'Высшая'])
         self.grind.addItems(['В зернах', 'Молотый'])
         self.pushButton.clicked.connect(self.add)
@@ -30,12 +32,12 @@ class AddCoffeeForm(QDialog):
                                 'Заполните все формы.')
 
 
-class UpdateCoffeeForm(QDialog):
+class UpdateCoffeeForm(QDialog, Ui_Dialog):
     def __init__(self, parent, id, title, roasting, grind, taste, price, volume):
         super().__init__(parent)
         self.p = parent
         self.id = id
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
 
         self.roast.addItems(['Слабая', 'Средняя', 'Сильная', 'Высшая'])
         self.grind.addItems(['В зернах', 'Молотый'])
@@ -64,14 +66,14 @@ class UpdateCoffeeForm(QDialog):
                                 'Заполните все формы.')
 
 
-class DBSample(QMainWindow):
+class DBSample(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.addButton.clicked.connect(self.create_add_form)
         self.updateButton.clicked.connect(self.create_update_form)
 
-        self.connection = sqlite3.connect("coffee.db")
+        self.connection = sqlite3.connect("data/coffee.db")
         self.id = len(self.connection.cursor().execute('SELECT * FROM coffee').fetchall())
         self.show_data()
 
